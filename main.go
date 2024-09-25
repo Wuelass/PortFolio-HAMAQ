@@ -84,7 +84,16 @@ func main() {
 	})
 
 	router.POST("/arbre", func(c *gin.Context) {
+		name := c.PostForm("name")
+		name_latin := c.PostForm("name_latin")
+		race := c.PostForm("race")
+		lifetime := c.PostForm("lifetime")
+		biome := c.PostForm("biome")
 
+		err = db.AddTree(name, name_latin, race, lifetime, biome)
+		if err != nil {
+			log.Fatalln("error while adding Tree", err)
+		}
 	})
 
 	router.PUT("/arbre", func(c *gin.Context) {
