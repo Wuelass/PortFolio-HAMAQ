@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -18,10 +19,12 @@ type Tree struct {
 
 type User struct {
 	gorm.Model
-	Username string
-	Email    string
-	Password string
-	Admin    bool
+	Username   string
+	Email      string
+	Password   string
+	Admin      bool
+	SessionID  string
+	Expiration time.Time
 }
 
 func InitDatabase() {
