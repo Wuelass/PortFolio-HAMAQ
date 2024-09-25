@@ -5,7 +5,7 @@ Provenance de l'idée : Traduction littérale de "Nature" en latin
 
 # Equipe du projet 
 
-MAURY Quentin - Backend
+MAURY Quentin - Backend \n
 BRAIK Massil - Backend
 JOURSON Axel - Documentation
 DE CARVALHO Hugo - Frontend
