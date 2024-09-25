@@ -8,21 +8,25 @@ import (
 	"gorm.io/gorm"
 )
 
+type TreeList struct{
+	Trees []Tree
+}
+
 type Tree struct {
 	gorm.Model
 	Name          string
 	NameLatin     string
 	TreeType      string
-	LifeTime      int
+	LifeTime      string
 	Environnement string
 }
 
 type User struct {
 	gorm.Model
-	Username   string
-	Email      string
-	Password   string
-	Admin      bool
+	Username string
+	Email    string
+	Password string
+	Admin    bool
 	//SessionID  string
 	//Expiration time.Time
 }
@@ -46,9 +50,9 @@ func InitDatabase() {
 func AddUser(username, email, password string) error {
 	user := User{
 		Username: username,
-		Email : email,
+		Email:    email,
 		Password: password,
-		Admin: false,
+		Admin:    false,
 	}
 	if err := DB.Create(&user).Error; err != nil {
 		return err
@@ -56,8 +60,7 @@ func AddUser(username, email, password string) error {
 	return nil
 }
 
-
-func GetUserByUsername(username string) (User, error){
+func GetUserByUsername(username string) (User, error) {
 	var user User
 	result := DB.Where("username = ?", username).First(&user)
 	if result.Error != nil {
@@ -65,7 +68,17 @@ func GetUserByUsername(username string) (User, error){
 	}
 	return user, nil
 }
-func GetUserByEmail(email string) (User, error){
+
+func GetTreeById(id int) (Tree, error) {
+	var tree Tree
+	result := DB.Where("id = ?", id).First(&tree)
+	if result.Error != nil {
+		return Tree{}, result.Error
+	}
+	return tree, nil
+}
+
+func GetUserByEmail(email string) (User, error) {
 	var user User
 	result := DB.Where("email = ?", email).First(&user)
 	if result.Error != nil {
@@ -74,5 +87,33 @@ func GetUserByEmail(email string) (User, error){
 	return user, nil
 }
 
+func AddTree(name, nameLatin, treeType, lifetime string, environnement string) error {
+	tree := Tree{
+		Name:          name,
+		NameLatin:     nameLatin,
+		TreeType:      treeType,
+		LifeTime:      lifetime,
+		Environnement: environnement,
+	}
+	if err := DB.Create(&tree).Error; err != nil {
+		return err
+	}
+	return nil
 
+}
 
+func DeleteTreeByID(id int) error {
+	if err := DB.Where("id = ?", id).Delete(&Tree{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func CheckTreeByID(id int) error {
+	var tree Tree
+	// Query the database to check if a tree with the given ID exists
+	if err := DB.First(&tree, id).Error; err != nil {
+		return err // Return the error (e.g., "record not found" or database errors)
+	}
+	return nil // If the tree exists, return nil (no error)
+}
