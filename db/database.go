@@ -7,6 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
+type Tree struct {
+	gorm.Model
+	Name          string
+	NameLatin     string
+	TreeType      string
+	LifeTime      int
+	Environnement string
+}
+
 type User struct {
 	gorm.Model
 	Username string
@@ -21,7 +30,7 @@ func InitDatabase() {
 		log.Fatalln("failed to connect to database")
 	}
 
-	if err := DB.AutoMigrate(&User{}); err != nil {
+	if err := DB.AutoMigrate(&User{}, &Tree{}); err != nil {
 		log.Fatalln("failed to migrate database: ", err)
 	}
 
