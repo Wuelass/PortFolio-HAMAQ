@@ -13,8 +13,12 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
+	router.LoadHTMLGlob("templates/*")
 
+	router.Static("/static", "./static")
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
 	})
 
 	router.GET("/register", func(c *gin.Context) {
