@@ -32,3 +32,9 @@ Site de documentation sur la nature et ses bienfaits, créé pour ceux voulant e
 - Type 
 - Durée de Vie
 - Environnement
+
+# COMMENT INSTALLER LE SITE ? 
+
+- Etape 1 : Copier le lien suivant -> https://github.com/Wuelass/PortFolio-HAMAQ/blob/main/README.md
+- Etape 2 : Ouvrir une invite de commande
+- Etape 3 : Effectuer la commande -> git clone + lien
