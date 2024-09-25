@@ -10,6 +10,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type TreeList struct{
+	Trees []Tree
+}
+
 type Tree struct {
 	gorm.Model
 	Name          string
