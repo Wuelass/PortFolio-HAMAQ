@@ -1,24 +1,81 @@
 package main
 
 import (
+	"PortFolio-HAMAQ/db"
+	"log"
+
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
+	db.InitDatabase()
 
 	router := gin.Default()
 
+	router.LoadHTMLGlob("templates/*")
+
+	router.Static("/static", "./static")
+
 	router.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
+	router.POST("/register", func(c *gin.Context) {
+
+		username := c.PostForm("username")
+		email := c.PostForm("email")
+		password := c.PostForm("password")
+		confirmPassword := c.PostForm("confirmPassword")
+		password, err := db.HashPassword(password)
+		if err != nil {
+			log.Fatalln("error hashing password", err)
+		}
+
+		if !db.CheckPasswordHash(confirmPassword, password) {
+			log.Fatalln("password and confirmPassword are not the same", err)
+		}
+
+		err = db.AddUser(username, email, password)
+		if err != nil {
+			log.Fatalln("error while adding user", err)
+		}
 
 	})
 
-	router.GET("/register", func(c *gin.Context) {
+	router.POST("/login", func(c *gin.Context) {
+		var connected bool
+		if !connected {
+			var user db.User
+			var userFound bool
+			var err error
+			var connectionApprouved bool
+			identifiant := c.PostForm("identifiant")
+			password := c.PostForm("password")
+			if identifiant != "" {
+				user, err = db.GetUserByEmail(identifiant)
+				if err == nil {
+					userFound = true
+				}
+				if !userFound {
+					user, err = db.GetUserByUsername(identifiant)
+					if err == nil {
+						userFound = true
+					} else {
+						log.Fatalln("no user found")
+					}
+				}
+			}
 
-	})
+			if userFound {
+				connectionApprouved = db.CheckPasswordHash(password, user.Password)
+			}
 
-	router.GET("/login", func(c *gin.Context) {
+			if connectionApprouved {
+				connected = true
+			}
+		}
 
 	})
 
