@@ -64,6 +64,7 @@ func GetUserByUsername(username string) (User, error) {
 	}
 	return user, nil
 }
+
 func GetUserByEmail(email string) (User, error) {
 	var user User
 	result := DB.Where("email = ?", email).First(&user)
@@ -72,7 +73,8 @@ func GetUserByEmail(email string) (User, error) {
 	}
 	return user, nil
 }
-func AddTree(name, nameLatin, treeType, lifetime  string, environnement string) error {
+
+func AddTree(name, nameLatin, treeType, lifetime string, environnement string) error {
 	tree := Tree{
 		Name:          name,
 		NameLatin:     nameLatin,
@@ -85,4 +87,11 @@ func AddTree(name, nameLatin, treeType, lifetime  string, environnement string) 
 	}
 	return nil
 
+}
+
+func DeleteTreeByName(name string) error {
+	if err := DB.Where("name = ?", name).Delete(&Tree{}).Error; err != nil {
+		return err
+	}
+	return nil
 }
