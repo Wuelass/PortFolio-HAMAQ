@@ -73,7 +73,7 @@ func main() {
 			}
 
 			if connectionApprouved {
-
+				connected = true
 			}
 		}
 
