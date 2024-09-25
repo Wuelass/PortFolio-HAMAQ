@@ -1,6 +1,6 @@
 # Nom du projet 
 
-## - Naturalis
+### - Naturalis
 - Provenance de l'idée : Traduction littérale de "Nature" en latin
 
 ## Equipe du projet 
@@ -9,7 +9,7 @@
 - BRAIK Massil - Backend
 - JOURSON Axel - Documentation
 - DE CARVALHO Hugo - Frontend
-- TANGE NEGUEKO Ashley - Frontend
+- TAGNE NEGUEKO Ashley - Frontend
 
 ## Description du projet
 
