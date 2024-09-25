@@ -1,12 +1,15 @@
 package main
 
 import (
+	"PortFolio-HAMAQ/db"
+
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
+	db.InitDatabase()
 
 	router := gin.Default()
 
