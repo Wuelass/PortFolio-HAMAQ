@@ -19,10 +19,10 @@ type Tree struct {
 
 type User struct {
 	gorm.Model
-	Username   string
-	Email      string
-	Password   string
-	Admin      bool
+	Username string
+	Email    string
+	Password string
+	Admin    bool
 	//SessionID  string
 	//Expiration time.Time
 }
@@ -46,9 +46,9 @@ func InitDatabase() {
 func AddUser(username, email, password string) error {
 	user := User{
 		Username: username,
-		Email : email,
+		Email:    email,
 		Password: password,
-		Admin: false,
+		Admin:    false,
 	}
 	if err := DB.Create(&user).Error; err != nil {
 		return err
@@ -56,8 +56,7 @@ func AddUser(username, email, password string) error {
 	return nil
 }
 
-
-func GetUserByUsername(username string) (User, error){
+func GetUserByUsername(username string) (User, error) {
 	var user User
 	result := DB.Where("username = ?", username).First(&user)
 	if result.Error != nil {
@@ -65,7 +64,7 @@ func GetUserByUsername(username string) (User, error){
 	}
 	return user, nil
 }
-func GetUserByEmail(email string) (User, error){
+func GetUserByEmail(email string) (User, error) {
 	var user User
 	result := DB.Where("email = ?", email).First(&user)
 	if result.Error != nil {
@@ -73,6 +72,17 @@ func GetUserByEmail(email string) (User, error){
 	}
 	return user, nil
 }
+func AddTree(name, nameLatin, treeType string, lifetime int, environnement string) error {
+	tree := Tree{
+		Name:          name,
+		NameLatin:     nameLatin,
+		TreeType:      treeType,
+		LifeTime:      lifetime,
+		Environnement: environnement,
+	}
+	if err := DB.Create(&tree).Error; err != nil {
+		return err
+	}
+	return nil
 
-
-
+}
