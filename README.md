@@ -20,10 +20,15 @@ Site de documentation sur la nature et ses bienfaits, créé pour ceux voulant e
 - Page "HOME" regroupant toutes les fonctionnalités et pages autour de notre thème principal
 - Chacune des pages donne des informations à l'utilisateur sur un sujet précis
 - Usage d'une base de données de 2 tables, l'une pour les utilisateurs et l'autre pour les éléments du site.
-### Structure des tables : 
-- ID          | ID
-- Nom         | Nom 
-- Password    | Nom Latin
--             | Durée de vie
--             | Environnement
--             | Race
+### Structure de table USER : 
+- ID
+- Nom
+- Password
+
+### Structure de table TREE :
+- ID
+- Nom
+- Nom Latin
+- Type 
+- Durée de Vie
+- Environnement
