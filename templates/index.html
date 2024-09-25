@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio d'Arbres</title>
     <link rel="stylesheet" href="../static/styles.css">
+    <style>
+        .login-section {
+            display: none; 
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Portfolio d'Arbres</h1>
+        <h1>Portfolio Naturalis</h1>
         <p>Découvrez une sélection des plus beaux arbres du monde.</p>
+        <nav>
+            <a href="#" id="loginLink">Connexion</a>
+        </nav>
     </header>
 
     <section class="gallery">
@@ -35,8 +48,51 @@
         </div>
     </section>
 
+    <section id="login" class="login-section">
+        <h2>Connexion</h2>
+        <form id="loginForm">
+            <div>
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="submit">Se connecter</button>
+            </div>
+        </form>
+        <p id="loginMessage"></p>
+    </section>
+
     <footer>
-        <p>Portfolio réalisé par [Votre Nom] | © 2024</p>
+        <p>Portfolio </p>
     </footer>
+
+    <script>
+        
+        document.getElementById('loginLink').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const loginSection = document.querySelector('.login-section');
+            loginSection.style.display = (loginSection.style.display === 'none' || loginSection.style.display === '') ? 'block' : 'none';
+        });
+
+    
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            
+            if (username === "utilisateur" && password === "motdepasse") {
+                document.getElementById('loginMessage').textContent = 'Connexion réussie !';
+                document.getElementById('loginMessage').style.color = 'green';
+            } else {
+                document.getElementById('loginMessage').textContent = 'Nom d\'utilisateur ou mot de passe incorrect.';
+                document.getElementById('loginMessage').style.color = 'red';
+            }
+        });
+    </script>
 </body>
 </html>
