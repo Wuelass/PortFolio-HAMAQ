@@ -108,6 +108,10 @@ func main() {
 		c.JSON(http.StatusOK, tree)
 	})
 
+	router.GET("/add-tree", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "add_tree.html", nil)
+	})
+
 	router.POST("/arbre", func(c *gin.Context) {
 		name := c.PostForm("name")
 		name_latin := c.PostForm("name_latin")

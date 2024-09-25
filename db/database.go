@@ -1,7 +1,9 @@
 package db
 
 import (
+	"errors"
 	"log"
+
 	//"time"
 
 	"gorm.io/driver/sqlite"
@@ -30,7 +32,8 @@ type User struct {
 var DB *gorm.DB
 
 func InitDatabase() {
-	DB, err := gorm.Open(sqlite.Open("portfolio.db"), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(sqlite.Open("portfolio.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln("failed to connect to database")
 	}
@@ -84,6 +87,11 @@ func GetUserByEmail(email string) (User, error) {
 }
 
 func AddTree(name, nameLatin, treeType, lifetime string, environnement string) error {
+	if DB == nil {
+		log.Println("Database connection is not initialized")
+		return errors.New("database connection is not initialized")
+	}
+
 	tree := Tree{
 		Name:          name,
 		NameLatin:     nameLatin,
@@ -94,6 +102,7 @@ func AddTree(name, nameLatin, treeType, lifetime string, environnement string) e
 	if err := DB.Create(&tree).Error; err != nil {
 		return err
 	}
+	log.Println("tree add")
 	return nil
 
 }
