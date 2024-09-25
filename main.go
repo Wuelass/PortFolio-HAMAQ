@@ -2,9 +2,13 @@ package main
 
 import (
 	"PortFolio-HAMAQ/db"
+	"errors"
 	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -83,6 +87,27 @@ func main() {
 
 	})
 
+	router.GET("/arbre/:id", func(c *gin.Context) {
+		idStr := c.Param("id") // Extract the ID as a string.
+
+		// Convert the ID from string to int.
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			return
+		}
+
+		// Call GetTreeById to fetch the tree.
+		tree, err := db.GetTreeById(id)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Tree not found"})
+			return
+		}
+
+		// Return the tree data as JSON.
+		c.JSON(http.StatusOK, tree)
+	})
+
 	router.POST("/arbre", func(c *gin.Context) {
 		name := c.PostForm("name")
 		name_latin := c.PostForm("name_latin")
@@ -96,12 +121,35 @@ func main() {
 		}
 	})
 
-	router.PUT("/arbre", func(c *gin.Context) {
+	router.PUT("/arbre/:id", func(c *gin.Context) {
 
 	})
 
-	router.DELETE("/arbre", func(c *gin.Context) {
+	router.DELETE("/arbre/:id", func(c *gin.Context) {
+		idStr := c.Param("id") // Extract the ID from the URL
 
+		// Convert the ID from string to int
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			return
+		}
+
+		if err := db.CheckTreeByID(id); err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Tree not found"})
+			} else {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+			}
+			return
+		}
+
+		if err := db.DeleteTreeByID(id); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete tree"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Tree deleted successfully"})
 	})
 
 	// Start the server

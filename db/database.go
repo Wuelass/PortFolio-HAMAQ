@@ -65,6 +65,15 @@ func GetUserByUsername(username string) (User, error) {
 	return user, nil
 }
 
+func GetTreeById(id int) (Tree, error) {
+	var tree Tree
+	result := DB.Where("id = ?", id).First(&tree)
+	if result.Error != nil {
+		return Tree{}, result.Error
+	}
+	return tree, nil
+}
+
 func GetUserByEmail(email string) (User, error) {
 	var user User
 	result := DB.Where("email = ?", email).First(&user)
@@ -89,9 +98,18 @@ func AddTree(name, nameLatin, treeType, lifetime string, environnement string) e
 
 }
 
-func DeleteTreeByName(name string) error {
-	if err := DB.Where("name = ?", name).Delete(&Tree{}).Error; err != nil {
+func DeleteTreeByID(id int) error {
+	if err := DB.Where("id = ?", id).Delete(&Tree{}).Error; err != nil {
 		return err
 	}
 	return nil
+}
+
+func CheckTreeByID(id int) error {
+	var tree Tree
+	// Query the database to check if a tree with the given ID exists
+	if err := DB.First(&tree, id).Error; err != nil {
+		return err // Return the error (e.g., "record not found" or database errors)
+	}
+	return nil // If the tree exists, return nil (no error)
 }
