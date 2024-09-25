@@ -13,7 +13,7 @@ type Tree struct {
 	Name          string
 	NameLatin     string
 	TreeType      string
-	LifeTime      int
+	LifeTime      string
 	Environnement string
 }
 
@@ -72,7 +72,7 @@ func GetUserByEmail(email string) (User, error) {
 	}
 	return user, nil
 }
-func AddTree(name, nameLatin, treeType string, lifetime int, environnement string) error {
+func AddTree(name, nameLatin, treeType, lifetime  string, environnement string) error {
 	tree := Tree{
 		Name:          name,
 		NameLatin:     nameLatin,
