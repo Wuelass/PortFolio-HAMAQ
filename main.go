@@ -90,7 +90,7 @@ func main() {
 		lifetime := c.PostForm("lifetime")
 		biome := c.PostForm("biome")
 
-		err = db.AddTree(name, name_latin, race, lifetime, biome)
+		err := db.AddTree(name, name_latin, race, lifetime, biome)
 		if err != nil {
 			log.Fatalln("error while adding Tree", err)
 		}
