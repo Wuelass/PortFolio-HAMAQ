@@ -84,7 +84,14 @@ func main() {
 	})
 
 	router.GET("/arbre", func(c *gin.Context) {
+		var trees []db.Tree
 
+		if err := db.DB.Find(&trees).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve trees"})
+			return
+		}
+
+		c.HTML(http.StatusOK, "alltree.html", trees)
 	})
 
 	router.GET("/arbre/:id", func(c *gin.Context) {
