@@ -100,7 +100,14 @@ func main() {
 	})
 
 	router.GET("/arbre", func(c *gin.Context) {
+		var trees []db.Tree
 
+		if err := db.DB.Find(&trees).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve trees"})
+			return
+		}
+
+		c.HTML(http.StatusOK, "alltree.html", trees)
 	})
 
 	router.GET("/arbre/:id", func(c *gin.Context) {
@@ -145,17 +152,23 @@ func main() {
 
 	})
 
-	router.DELETE("/arbre/:id", func(c *gin.Context) {
-		idStr := c.Param("id") // Extract the ID from the URL
+	router.POST("/arbresupp", func(c *gin.Context) {
+		idStr := c.PostForm("id")
+		log.Println("Received ID:", idStr) // Log the received ID
 
 		// Convert the ID from string to int
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
+			log.Println("Invalid ID format:", idStr) // Log invalid ID
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 			return
 		}
 
+		log.Println("Converted ID:", id) // Log the converted ID
+
+		// Check if the tree with the given ID exists
 		if err := db.CheckTreeByID(id); err != nil {
+			log.Println("Error checking tree by ID:", err) // Log the error
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				c.JSON(http.StatusNotFound, gin.H{"error": "Tree not found"})
 			} else {
@@ -164,12 +177,15 @@ func main() {
 			return
 		}
 
+		// Proceed to delete the tree
 		if err := db.DeleteTreeByID(id); err != nil {
+			log.Println("Error deleting tree by ID:", err) // Log the error
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete tree"})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Tree deleted successfully"})
+		log.Println("Tree deleted successfully with ID:", id) // Log success
+		c.HTML(http.StatusOK, "successSupp.html", nil)
 	})
 
 	// Start the server
