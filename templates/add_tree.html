@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add a Tree</title>
+    <title>Admin Tree</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,9 +11,11 @@
             padding: 0;
             background-color: #f4f4f4;
         }
+
         h1 {
             color: #333;
         }
+
         form {
             background-color: #fff;
             padding: 20px;
@@ -22,11 +24,13 @@
             max-width: 400px;
             margin: auto;
         }
+
         label {
             display: block;
             margin: 10px 0 5px;
             font-weight: bold;
         }
+
         input[type="text"], input[type="number"] {
             width: 100%;
             padding: 8px;
@@ -34,6 +38,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         input[type="submit"] {
             background-color: #28a745;
             color: white;
@@ -43,9 +48,11 @@
             cursor: pointer;
             font-size: 16px;
         }
+
         input[type="submit"]:hover {
             background-color: #218838;
         }
+
     </style>
 </head>
 <body>
@@ -68,6 +75,14 @@
         <input type="text" id="biome" name="biome" required>
 
         <input type="submit" value="Add Tree">
+    </form>
+
+    <h1>Supp a Tree</h1>
+    <form action="/arbresupp" method="POST">
+        <label for="id">Tree Id:</label>
+        <input type="text" id="id" name="id" required>
+
+        <input type="submit" value="Supp Tree">
     </form>
 
 </body>
