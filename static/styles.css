@@ -82,23 +82,6 @@ nav .btn:hover {
     background-position: center; /* Centre l'image */
 }
 
-/* Images de fond pour chaque carte */
-.tree-card:nth-child(1) {
-    background-image: url('https://c8.alamy.com/compfr/f5a2ea/les-feuilles-d-automne-arriere-plan-feuilles-de-chene-et-de-glands-f5a2ea.jpg'); /*chene*/
-}
-
-.tree-card:nth-child(2) {
-    background-image: url('https://media.istockphoto.com/id/1089798626/fr/photo/adansonia-digitata-ou-baobab-feuilles-darbre-vert.jpg?s=612x612&w=0&k=20&c=flCzY2GCA_ldwOrEKlNcIcgVA-MxH6y-kRp_ICervzk='); /* le baobab */
-}
-
-.tree-card:nth-child(3) {
-    background-image: url('https://images.squarespace-cdn.com/content/v1/5d27d0c88dbb32000183e6d8/1678852568316-VRL6VNNOW83XOV2FMV1W/Giant+Sequoia+4+-+Square.png?format=1500w'); /* le séquoia */
-}
-
-.tree-card:nth-child(4) {
-    background-image: url('https://www.publicdomainpictures.net/pictures/30000/nahled/maple-leaves-background.jpg'); /*  l'érable */
-}
-
 .tree-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.2);
@@ -139,3 +122,4 @@ footer p {
     margin: 0;
     font-size: 0.9rem;
 }
+

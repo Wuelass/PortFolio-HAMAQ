@@ -6,6 +6,8 @@
     <title>Portfolio d'Arbres</title>
     <link rel="stylesheet" href="../static/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .login-section {
             display: none;
@@ -36,83 +38,34 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+
+            <div class="container-fluid">
+              <!-- Links -->
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"> Home</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/arbre"> Botanie</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/add-tree"> Administration</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/register">Inscription</a>
+                </li>
+                
+              </ul>
+            </div>
+          
+        </nav>
+        <div class="container"></div>
             <h1>Portfolio Naturalis</h1>
             <p>Découvrez une sélection des plus beaux arbres du monde.</p>
-            <nav>
-                <a href="#" id="loginLink" class="btn">Connexion</a>
-            </nav>
         </div>
-    </header>
-
-    <main>
-        <section class="gallery">
-            <div class="tree-card">
-                <img src="chene.jpg" alt="Chêne">
-                <h2>Chêne</h2>
-                <p>Le chêne est un arbre majestueux symbolisant la force et la longévité. Il peut vivre jusqu'à 1 000 ans.</p>
-            </div>
-            <div class="tree-card">
-                <img src="baobab.jpg" alt="Baobab">
-                <h2>Baobab</h2>
-                <p>Connu comme "l'arbre à bouteille", le baobab est un symbole de résilience dans les climats arides.</p>
-            </div>
-            <div class="tree-card">
-                <img src="sequoia.jpg" alt="Séquoia">
-                <h2>Séquoia</h2>
-                <p>Le séquoia est le plus grand arbre du monde, atteignant des hauteurs impressionnantes de plus de 100 mètres.</p>
-            </div>
-            <div class="tree-card">
-                <img src="erable.jpg" alt="Érable">
-                <h2>Érable</h2>
-                <p>L'érable est célèbre pour ses belles feuilles qui prennent des teintes flamboyantes à l'automne.</p>
-            </div>
-        </section>
-    </main>
-
-    <section id="login" class="login-section">
-        <h2>Connexion</h2>
-        <form id="loginForm">
-            <div>
-                <label for="username">Nom d'utilisateur :</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <button type="submit">Se connecter</button>
-            </div>
-        </form>
-        <p id="loginMessage"></p>
-    </section>
-
-    <footer>
+    <!-- <footer>
         <p>&copy; 2024 Portfolio Naturalis</p>
-    </footer>
-
-    <script>
-        document.getElementById('loginLink').addEventListener('click', function(event) {
-            event.preventDefault();
-            const loginSection = document.querySelector('.login-section');
-            loginSection.style.display = (loginSection.style.display === 'none' || loginSection.style.display === '') ? 'block' : 'none';
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (username === "utilisateur" && password === "motdepasse") {
-                document.getElementById('loginMessage').textContent = 'Connexion réussie !';
-                document.getElementById('loginMessage').style.color = 'green';
-            } else {
-                document.getElementById('loginMessage').textContent = 'Nom d\'utilisateur ou mot de passe incorrect.';
-                document.getElementById('loginMessage').style.color = 'red';
-            }
-        });
-    </script>
+    </footer> -->
 </body>
 </html>
