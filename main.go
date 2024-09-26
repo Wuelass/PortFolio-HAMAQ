@@ -116,6 +116,13 @@ func main() {
 
 	})
 
+	router.GET("/login", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "login.html", gin.H{
+			"IsAuthenticated": c.GetBool("IsAuthenticated"),
+			"IsAdmin":         c.GetBool("IsAdmin"),
+		})
+	})
+
 	router.GET("/logout", func(c *gin.Context) {
 		session := sessions.Default(c)
 		session.Clear()
