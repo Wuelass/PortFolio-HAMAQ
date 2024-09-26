@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	//"time"
@@ -10,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type TreeList struct{
+type TreeList struct {
 	Trees []Tree
 }
 
@@ -51,13 +52,26 @@ func InitDatabase() {
 }
 
 func AddUser(username, email, password string) error {
-	user := User{
+	var user User
+	if err := DB.Where("username = ?", username).First(&user).Error; err == nil {
+		return fmt.Errorf("username already taken")
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+
+	if err := DB.Where("email = ?", email).First(&user).Error; err == nil {
+		return fmt.Errorf("email already taken")
+	} else if !errors.Is(err, gorm.ErrRecordNotFound){
+		return err
+	}
+
+	newUser := User{
 		Username: username,
 		Email:    email,
 		Password: password,
 		Admin:    false,
 	}
-	if err := DB.Create(&user).Error; err != nil {
+	if err := DB.Create(&newUser).Error; err != nil {
 		return err
 	}
 	return nil
