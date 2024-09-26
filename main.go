@@ -26,25 +26,41 @@ func main() {
 		c.HTML(200, "index.html", nil)
 	})
 
-	router.POST("/register", func(c *gin.Context) {
+	router.GET("/register", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "register.html", nil)
+	})
 
-		username := c.PostForm("username")
+	router.POST("/registerUser", func(c *gin.Context) {
+		var err error
+		username := c.PostForm("name")
 		email := c.PostForm("email")
 		password := c.PostForm("password")
 		confirmPassword := c.PostForm("confirmPassword")
-		password, err := db.HashPassword(password)
-		if err != nil {
-			log.Fatalln("error hashing password", err)
+		if password == confirmPassword {
+			password, err = db.HashPassword(password)
+			if err != nil {
+				log.Fatalln("error hashing password", err)
+			}
+		} else {
+			log.Println("password and confirmPassword are not the same")
+			c.Redirect(http.StatusSeeOther, "/register")
+			return
 		}
 
-		if !db.CheckPasswordHash(confirmPassword, password) {
-			log.Fatalln("password and confirmPassword are not the same", err)
+		if err := db.AddUser(username, email, password); err != nil {
+			// Log the error (for internal debugging purposes)
+			log.Printf("error while adding user: %v", err)
+			// Redirect back to the registration page with an error message
+			c.HTML(http.StatusOK, "register.html", gin.H{
+				"error":    err.Error(), // Pass the error message to the template
+				"username": username,    // Preserve entered values so the user doesn't need to re-enter them
+				"email":    email,
+			})
+
+			return
 		}
 
-		err = db.AddUser(username, email, password)
-		if err != nil {
-			log.Fatalln("error while adding user", err)
-		}
+		c.Redirect(http.StatusSeeOther, "/login")
 
 	})
 
@@ -84,7 +100,14 @@ func main() {
 	})
 
 	router.GET("/arbre", func(c *gin.Context) {
+		var trees []db.Tree
 
+		if err := db.DB.Find(&trees).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve trees"})
+			return
+		}
+
+		c.HTML(http.StatusOK, "alltree.html", trees)
 	})
 
 	router.GET("/arbre/:id", func(c *gin.Context) {
