@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
@@ -18,16 +21,37 @@ func main() {
 
 	router := gin.Default()
 
-	router.LoadHTMLGlob("templates/*")
+	store := cookie.NewStore([]byte("123123"))
 
+	router.Use(sessions.Sessions("mysession", store))
+
+	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./static")
 
+	router.Use(func(c *gin.Context) {
+		session := sessions.Default(c)
+		userID := session.Get("user_id")
+		isAdmin := session.Get("is_admin")
+
+		c.Set("IsAuthenticated", userID != nil)
+		c.Set("IsAdmin", isAdmin == true)
+		c.Next()
+	})
+
+
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
+		c.HTML(200, "index.html", gin.H{
+			"IsAuthenticated": c.GetBool("IsAuthenticated"),
+			"IsAdmin":         c.GetBool("IsAdmin"),
+		})
+
 	})
 
 	router.GET("/register", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "register.html", nil)
+		c.HTML(http.StatusOK, "register.html", gin.H{
+			"IsAuthenticated": c.GetBool("IsAuthenticated"),
+			"IsAdmin":         c.GetBool("IsAdmin"),
+		})
 	})
 
 	router.POST("/registerUser", func(c *gin.Context) {
@@ -66,38 +90,37 @@ func main() {
 	})
 
 	router.POST("/login", func(c *gin.Context) {
-		var connected bool
-		if !connected {
-			var user db.User
-			var userFound bool
-			var err error
-			var connectionApprouved bool
-			identifiant := c.PostForm("identifiant")
-			password := c.PostForm("password")
-			if identifiant != "" {
-				user, err = db.GetUserByEmail(identifiant)
-				if err == nil {
-					userFound = true
-				}
-				if !userFound {
-					user, err = db.GetUserByUsername(identifiant)
-					if err == nil {
-						userFound = true
-					} else {
-						log.Fatalln("no user found")
-					}
-				}
-			}
+		var user db.User
+		var err error
+		identifiant := c.PostForm("identifiant")
+		password := c.PostForm("password")
 
-			if userFound {
-				connectionApprouved = db.CheckPasswordHash(password, user.Password)
-			}
-
-			if connectionApprouved {
-				connected = true
-			}
+		user, err = db.GetUserByEmail(identifiant)
+		if err != nil {
+			user, err = db.GetUserByUsername(identifiant)
 		}
 
+		if err != nil || !db.CheckPasswordHash(password, user.Password) {
+			c.HTML(http.StatusUnauthorized, "login.html", gin.H{
+				"error": "identifiants invalides",
+			})
+			return
+		}
+
+		session := sessions.Default(c)
+		session.Set("user_id", user.ID)
+		session.Set("user_name", user.Username)
+		session.Set("is_admin", user.Admin)
+		session.Save()
+		c.Redirect(http.StatusSeeOther, "/")
+
+	})
+
+	router.GET("/logout", func(c *gin.Context) {
+		session := sessions.Default(c)
+		session.Clear()
+		session.Save()
+		c.Redirect(http.StatusSeeOther, "/")
 	})
 
 	router.GET("/arbre", func(c *gin.Context) {
@@ -132,8 +155,12 @@ func main() {
 		c.JSON(http.StatusOK, tree)
 	})
 
-	router.GET("/add-tree", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "add_tree.html", nil)
+
+	router.GET("/add-tree", authRequired , adminRequired, func(c *gin.Context) {
+		c.HTML(http.StatusOK, "add_tree.html", gin.H{
+			"IsAuthenticated": true,
+			"IsAdmin": true,
+		})
 	})
 
 	router.POST("/arbre", func(c *gin.Context) {
@@ -193,3 +220,26 @@ func main() {
 	router.Run(":8080")
 
 }
+
+func authRequired(c *gin.Context) {
+	session := sessions.Default(c)
+	userID := session.Get("user_id")
+	if userID == nil {
+		c.Redirect(http.StatusSeeOther, "/login")
+		c.Abort()
+		return
+	}
+	c.Next()
+}
+
+func adminRequired(c *gin.Context) {
+	isAdmin := c.GetBool("IsAdmin")
+	if !isAdmin {
+		c.Redirect(http.StatusSeeOther, "/")
+		c.Abort()
+		return
+	}
+	c.Next()
+}
+
+
