@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Trees</title>
+</head>
+<body>
+    <h1>List of Trees</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Latin Name</th>
+                <th>Type</th>
+                <th>Lifetime</th>
+                <th>Environnement</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td>{{ .Name }}</td>
+                <td>{{ .NameLatin }}</td>
+                <td>{{ .TreeType }}</td>
+                <td>{{ .LifeTime }}</td>
+                <td>{{ .Environnement }}</td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="6">No trees found</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</body>
+</html>
