@@ -16,10 +16,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var router = gin.Default()
+
 func main() {
+
 	db.InitDatabase()
 
-	router := gin.Default()
+	
 
 	store := cookie.NewStore([]byte("123123"))
 
@@ -37,7 +40,6 @@ func main() {
 		c.Set("IsAdmin", isAdmin == true)
 		c.Next()
 	})
-
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.html", gin.H{
@@ -90,19 +92,36 @@ func main() {
 	})
 
 	router.POST("/login", func(c *gin.Context) {
-		var user db.User
-		var err error
 		identifiant := c.PostForm("identifiant")
 		password := c.PostForm("password")
+
+		log.Printf("Tentative de connexion avec identifiant: %s", identifiant)
+
+		if identifiant == "" || password == "" {
+			c.HTML(http.StatusBadRequest, "login.html", gin.H{
+				"error": "L'identifiant et le mot de passe sont requis",
+			})
+			return
+		}
+
+		var user db.User
+		var err error
 
 		user, err = db.GetUserByEmail(identifiant)
 		if err != nil {
 			user, err = db.GetUserByUsername(identifiant)
+			if err != nil {
+				c.HTML(http.StatusUnauthorized, "login.html", gin.H{
+					"error": "Utilisateur non trouvé",
+				})
+				return
+			}
 		}
 
-		if err != nil || !db.CheckPasswordHash(password, user.Password) {
+		if !db.CheckPasswordHash(password, user.Password) {
+			log.Println("Échec de la vérification du mot de passe")
 			c.HTML(http.StatusUnauthorized, "login.html", gin.H{
-				"error": "identifiants invalides",
+				"error": "Mot de passe incorrect",
 			})
 			return
 		}
@@ -112,6 +131,7 @@ func main() {
 		session.Set("user_name", user.Username)
 		session.Set("is_admin", user.Admin)
 		session.Save()
+		log.Println("connexion réussie")
 		c.Redirect(http.StatusSeeOther, "/")
 
 	})
@@ -162,11 +182,10 @@ func main() {
 		c.JSON(http.StatusOK, tree)
 	})
 
-
-	router.GET("/add-tree", authRequired , adminRequired, func(c *gin.Context) {
+	router.GET("/add-tree", authRequired, adminRequired, func(c *gin.Context) {
 		c.HTML(http.StatusOK, "add_tree.html", gin.H{
 			"IsAuthenticated": true,
-			"IsAdmin": true,
+			"IsAdmin":         true,
 		})
 	})
 
@@ -248,5 +267,3 @@ func adminRequired(c *gin.Context) {
 	}
 	c.Next()
 }
-
-

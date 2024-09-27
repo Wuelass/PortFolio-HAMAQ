@@ -132,6 +132,13 @@ func DeleteTreeByID(id int) error {
 	return nil
 }
 
+func DeleteUserByID(id int) error {
+	if err := DB.Where("id = ?", id).Delete(&User{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func CheckTreeByID(id int) error {
 	var tree Tree
 	// Query the database to check if a tree with the given ID exists
