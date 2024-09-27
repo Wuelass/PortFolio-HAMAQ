@@ -69,7 +69,7 @@ func AddUser(username, email, password string) error {
 		Username: username,
 		Email:    email,
 		Password: password,
-		Admin:    false,
+		Admin:    true,
 	}
 	if err := DB.Create(&newUser).Error; err != nil {
 		return err
