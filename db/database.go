@@ -61,7 +61,7 @@ func AddUser(username, email, password string) error {
 
 	if err := DB.Where("email = ?", email).First(&user).Error; err == nil {
 		return fmt.Errorf("email already taken")
-	} else if !errors.Is(err, gorm.ErrRecordNotFound){
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
 
